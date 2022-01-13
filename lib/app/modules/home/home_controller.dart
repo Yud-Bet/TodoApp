@@ -9,16 +9,19 @@ class HomeController extends GetxController {
   final pageController = PageController();
   final pageNames = ['All task', 'Ongoing taks', 'Finished tasks'];
   var pageName = 'All tasks'.obs;
+  bool useDB;
 
   RxList<Task> tasks = RxList<Task>();
 
   var textFieldController = TextEditingController();
 
+  HomeController({this.useDB = true});
+
   @override
   void onInit() async {
     isLoading.value = true;
     super.onInit();
-    tasks = RxList(await TaskProvider.getTasks());
+    if (useDB) tasks.value = await TaskProvider.getTasks();
     isLoading.value = false;
   }
 
@@ -34,22 +37,21 @@ class HomeController extends GetxController {
   void addNewTask() async {
     if (validate()) {
       var task = Task(content: textFieldController.text);
-      tasks.add(task);
-      await TaskProvider.add(task);
       textFieldController.text = '';
-      Get.back();
+      tasks.add(task);
+      if (useDB) await TaskProvider.add(task);
     }
   }
 
   void deleteTask(Task task) async {
     tasks.remove(task);
-    await TaskProvider.delete(task);
+    if (useDB) await TaskProvider.delete(task);
   }
 
   void changeTaskStatus(Task task) async {
     var index = tasks.indexOf(task);
     tasks[index].isFinished = !task.isFinished;
-    await TaskProvider.updateStatus(task);
+    if (useDB) await TaskProvider.updateStatus(task);
     tasks.refresh();
   }
 

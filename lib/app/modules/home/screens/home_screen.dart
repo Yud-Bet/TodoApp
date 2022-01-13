@@ -82,7 +82,16 @@ class HomeScreen extends StatelessWidget {
                       decoration: const InputDecoration(hintText: 'eg. Do homeworks'),
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
-                    actions: [TextButton(onPressed: () => Get.back(), child: const Text('CANCEL')), TextButton(key: const Key('submitButton'), onPressed: controller.addNewTask, child: const Text('SUBMIT'))],
+                    actions: [
+                      TextButton(onPressed: () => Get.back(), child: const Text('CANCEL')),
+                      TextButton(
+                          key: const Key('submitButton'),
+                          onPressed: () {
+                            controller.addNewTask();
+                            Get.back();
+                          },
+                          child: const Text('SUBMIT'))
+                    ],
                   )),
         },
         child: const Icon(Icons.add),
