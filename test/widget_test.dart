@@ -18,7 +18,8 @@ void main() {
     final taskInputField = find.byKey(const ValueKey('taskInputField'));
     final submitButton = find.byKey(const ValueKey('submitButton'));
 
-    expect(find.text('this is widget test'), findsNothing);
+    String taskStr = 'this is widget test';
+    expect(find.text(taskStr), findsNothing);
 
     await tester.pumpWidget(GetMaterialApp(
       title: 'Todo',
@@ -30,25 +31,10 @@ void main() {
     ));
     await tester.tap(addButton);
     await tester.pump();
-    await tester.enterText(taskInputField, 'this is widget test');
+    await tester.enterText(taskInputField, taskStr);
     await tester.tap(submitButton);
     await tester.pump();
 
-    expect(find.text('this is widget test'), findsOneWidget);
-  });
-
-  testWidgets('Delete a task', (WidgetTester tester) async {
-    expect(find.text('this is widget test'), findsNothing);
-
-    await tester.pumpWidget(GetMaterialApp(
-      title: 'Todo',
-      theme: AppTheme.lightTheme,
-      initialRoute: Routes.home,
-      debugShowCheckedModeBanner: false,
-      getPages: AppPages.pages,
-      defaultTransition: Transition.cupertino,
-    ));
-
-    expect(find.text('this is widget test'), findsOneWidget);
+    expect(find.text(taskStr), findsOneWidget);
   });
 }

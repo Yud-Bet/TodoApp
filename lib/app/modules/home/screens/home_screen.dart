@@ -75,20 +75,20 @@ class HomeScreen extends StatelessWidget {
                       'Task',
                       style: Theme.of(context).textTheme.headline6,
                     ),
-                    content: TextField(
-                      key: const Key('taskInputField'),
-                      autofocus: true,
-                      controller: controller.textFieldController,
-                      decoration: const InputDecoration(hintText: 'eg. Do homeworks'),
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
+                    content: Obx(() => TextField(
+                          key: const Key('taskInputField'),
+                          autofocus: true,
+                          controller: controller.textFieldController,
+                          decoration: InputDecoration(hintText: 'eg. Do homeworks', errorText: !controller.validation.value ? 'Please type in a valid task' : null, errorStyle: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.red)),
+                          style: Theme.of(context).textTheme.bodyText1,
+                        )),
                     actions: [
                       TextButton(onPressed: () => Get.back(), child: const Text('CANCEL')),
                       TextButton(
                           key: const Key('submitButton'),
-                          onPressed: () {
-                            controller.addNewTask();
-                            Get.back();
+                          onPressed: () async {
+                            var success = await controller.addNewTask();
+                            if (success) Get.back();
                           },
                           child: const Text('SUBMIT'))
                     ],

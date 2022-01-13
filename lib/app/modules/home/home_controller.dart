@@ -14,6 +14,7 @@ class HomeController extends GetxController {
   RxList<Task> tasks = RxList<Task>();
 
   var textFieldController = TextEditingController();
+  RxBool validation = true.obs;
 
   HomeController({this.useDB = true});
 
@@ -34,12 +35,18 @@ class HomeController extends GetxController {
     pageName.value = pageNames[_pageIndex];
   }
 
-  void addNewTask() async {
+  Future<bool> addNewTask() async {
     if (validate()) {
       var task = Task(content: textFieldController.text);
-      textFieldController.text = '';
       tasks.add(task);
       if (useDB) await TaskProvider.add(task);
+      textFieldController.text = '';
+
+      validation.value = true;
+      return true;
+    } else {
+      validation.value = false;
+      return false;
     }
   }
 
